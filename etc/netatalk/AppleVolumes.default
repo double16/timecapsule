@@ -1,0 +1,4 @@
+:DEFAULT: cnidscheme:dbd options:upriv,usedots,tm volsizelimit:0
+
+/backup		"Time Capsule"
+
