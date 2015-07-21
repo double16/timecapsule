@@ -6,13 +6,10 @@ ENV LANG en_US.UTF-8
 ENV LC_ALL C.UTF-8
 ENV LANGUAGE en_US.UTF-8
 
-RUN apt-get -q update
-RUN apt-get -qy --force-yes dist-upgrade
-
-RUN apt-get install -qy --force-yes netatalk avahi-daemon
-
-# apt clean
-RUN apt-get clean &&\
+RUN apt-get -q update &&\
+  apt-get -qy --force-yes dist-upgrade &&\
+  apt-get install -qy --force-yes netatalk avahi-daemon &&\
+  apt-get clean &&\
   rm -rf /var/lib/apt/lists/* &&\
   rm -rf /tmp/*
 
