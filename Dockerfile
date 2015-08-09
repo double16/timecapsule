@@ -1,4 +1,4 @@
-FROM ubuntu:14.04.2
+FROM ubuntu:14.04.3
 MAINTAINER Patrick Double <pat@patdouble.com>
 
 ENV DEBIAN_FRONTEND noninteractive
