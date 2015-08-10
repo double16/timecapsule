@@ -21,6 +21,7 @@ EXPOSE 548
 
 RUN sed -i 's:/usr/bin/dbus:/bin/dbus:' /etc/init.d/dbus
 COPY etc/netatalk/* /etc/netatalk/
+ADD etc/avahi/services/afpd.service /etc/avahi/services/afpd.service
 
 ADD ./start.sh /start.sh
 RUN chmod u+x  /start.sh
