@@ -2,6 +2,10 @@
 
 test -n "${VOLPATH}" || VOLPATH="/backup"
 
+# Adjust user/group
+if [ -n "$PUID" ]; then usermod -o -u "$PUID" timecapsule ; fi
+if [ -n "$PGID" ]; then groupmod -o -g "$PGID" timecapsule ; fi
+
 # Configure netatalk
 sed -i -e "s/volsizelimit:0/volsizelimit:${VOLSIZELIMIT:-500000}/" /etc/netatalk/AppleVolumes.default
 sed -i -e "s:^/backup:${VOLPATH}:" /etc/netatalk/AppleVolumes.default
