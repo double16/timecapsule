@@ -7,6 +7,7 @@ sed -i -e "s/volsizelimit:0/volsizelimit:${VOLSIZELIMIT:-500000}/" /etc/netatalk
 sed -i -e "s:^/backup:${VOLPATH}:" /etc/netatalk/AppleVolumes.default
 
 # Fix backup permissions
+mkdir -p ${VOLPATH} || exit 1
 find ${VOLPATH} -not \( -user timecapsule -a -group timecapsule \) -exec chown timecapsule:timecapsule {} +
 find ${VOLPATH} -type d -a -not -perm -0770 -exec chmod ug+rwx {} +
 
