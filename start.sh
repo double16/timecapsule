@@ -1,11 +1,14 @@
 #!/bin/sh
 
+test -n "${VOLPATH}" || VOLPATH="/backup"
+
 # Configure netatalk
 sed -i -e "s/volsizelimit:0/volsizelimit:${VOLSIZELIMIT:-500000}/" /etc/netatalk/AppleVolumes.default
+sed -i -e "s:^/backup:${VOLPATH}:" /etc/netatalk/AppleVolumes.default
 
 # Fix backup permissions
-find /backup -not \( -user timecapsule -a -group timecapsule \) -exec chown timecapsule:timecapsule {} +
-find /backup -type d -a -not -perm -0770 -exec chmod ug+rwx {} +
+find ${VOLPATH} -not \( -user timecapsule -a -group timecapsule \) -exec chown timecapsule:timecapsule {} +
+find ${VOLPATH} -type d -a -not -perm -0770 -exec chmod ug+rwx {} +
 
 /etc/init.d/dbus start
 /usr/sbin/avahi-daemon --no-chroot -D
