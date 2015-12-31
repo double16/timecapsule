@@ -1,4 +1,4 @@
-FROM ubuntu:14.04.3
+FROM debian:sid
 MAINTAINER Patrick Double <pat@patdouble.com>
 
 ENV DEBIAN_FRONTEND noninteractive
@@ -19,7 +19,6 @@ VOLUME /log
 VOLUME /backup
 EXPOSE 548
 
-RUN sed -i 's:/usr/bin/dbus:/bin/dbus:' /etc/init.d/dbus
 COPY etc/netatalk/* /etc/netatalk/
 ADD etc/avahi/services/afpd.service /etc/avahi/services/afpd.service
 
