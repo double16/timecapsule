@@ -8,6 +8,7 @@ sed -i -e "s/:1000:1000:/:${PUID:-1000}:${PGID:-1000}:/" /etc/passwd
 # Configure netatalk
 sed -i -e "s/vol size limit = 0/vol size limit = ${VOLSIZELIMIT:-500000}/" /etc/afp.conf
 sed -i -e "s:path = /backup:path = ${VOLPATH}:" /etc/afp.conf
+cat /etc/afp.conf
 
 # Fix backup permissions
 mkdir -p ${VOLPATH} || exit 1

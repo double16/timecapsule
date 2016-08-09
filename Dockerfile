@@ -4,7 +4,7 @@ MAINTAINER Patrick Double <pat@patdouble.com>
 ENV LANG=en_US.UTF-8 LC_ALL=C.UTF-8 LANGUAGE=en_US.UTF-8 VERSION=3.1.9
 
 ADD 2nd-0001-afpd-cannot-build-when-ldap-is-not-defined.patch .
-RUN apk add --no-cache avahi build-base curl db-dev file dbus \
+RUN apk add --no-cache avahi build-base curl db-dev libgcrypt libgcrypt-dev file dbus \
   && curl http://heanet.dl.sourceforge.net/project/netatalk/netatalk/${VERSION}/netatalk-${VERSION}.tar.gz | tar xzf - \
   && cd netatalk-${VERSION} && patch -p1 < ../2nd-0001-afpd-cannot-build-when-ldap-is-not-defined.patch \
   && ./configure --prefix= --enable-dbus --disable-ldap \
@@ -12,9 +12,9 @@ RUN apk add --no-cache avahi build-base curl db-dev file dbus \
   && make test \
   && make install \
   && cd - && rm -rf netatalk-${VERSION} \
-  && apk del build-base db-dev
+  && apk del build-base libgcrypt-dev
 
-RUN addgroup -g 1000 timecapsule && adduser -u 1000 -G timecapsule timecapsule && echo "timecapsule:timecapsule" | chpasswd || true
+RUN addgroup -g 1000 timecapsule && adduser -u 1000 -G timecapsule -D timecapsule && echo "timecapsule:timecapsule" | chpasswd
 
 VOLUME /log
 VOLUME /backup
