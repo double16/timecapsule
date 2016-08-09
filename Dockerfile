@@ -1,25 +1,26 @@
-FROM debian:sid
+FROM alpine:3.4
 MAINTAINER Patrick Double <pat@patdouble.com>
 
-ENV DEBIAN_FRONTEND noninteractive
-ENV LANG en_US.UTF-8
-ENV LC_ALL C.UTF-8
-ENV LANGUAGE en_US.UTF-8
+ENV LANG=en_US.UTF-8 LC_ALL=C.UTF-8 LANGUAGE=en_US.UTF-8 VERSION=3.1.9
 
-RUN apt-get -q update &&\
-  apt-get -qy --force-yes dist-upgrade &&\
-  apt-get install -qy --force-yes netatalk avahi-daemon &&\
-  apt-get clean &&\
-  rm -rf /var/lib/apt/lists/* &&\
-  rm -rf /tmp/*
+ADD 2nd-0001-afpd-cannot-build-when-ldap-is-not-defined.patch .
+RUN apk add --no-cache avahi build-base curl db-dev file dbus \
+  && curl http://heanet.dl.sourceforge.net/project/netatalk/netatalk/${VERSION}/netatalk-${VERSION}.tar.gz | tar xzf - \
+  && cd netatalk-${VERSION} && patch -p1 < ../2nd-0001-afpd-cannot-build-when-ldap-is-not-defined.patch \
+  && ./configure --prefix= --enable-dbus --disable-ldap \
+  && make \
+  && make test \
+  && make install \
+  && cd - && rm -rf netatalk-${VERSION} \
+  && apk del build-base db-dev
 
-RUN useradd timecapsule -p "timecapsule" -m && echo "timecapsule:timecapsule" | chpasswd 
+RUN addgroup -g 1000 timecapsule && adduser -u 1000 -G timecapsule timecapsule && echo "timecapsule:timecapsule" | chpasswd || true
 
 VOLUME /log
 VOLUME /backup
 EXPOSE 548
 
-COPY etc/netatalk/* /etc/netatalk/
+COPY etc/afp.conf /etc/
 ADD etc/avahi/services/afpd.service /etc/avahi/services/afpd.service
 
 ADD ./start.sh /start.sh

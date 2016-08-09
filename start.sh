@@ -3,22 +3,27 @@
 test -n "${VOLPATH}" || VOLPATH="/backup"
 
 # Adjust user/group
-if [ -n "$PUID" ]; then usermod -o -u "$PUID" timecapsule ; fi
-if [ -n "$PGID" ]; then groupmod -o -g "$PGID" timecapsule ; fi
+sed -i -e "s/:1000:1000:/:${PUID:-1000}:${PGID:-1000}:/" /etc/passwd
 
 # Configure netatalk
-sed -i -e "s/volsizelimit:0/volsizelimit:${VOLSIZELIMIT:-500000}/" /etc/netatalk/AppleVolumes.default
-sed -i -e "s:^/backup:${VOLPATH}:" /etc/netatalk/AppleVolumes.default
+sed -i -e "s/vol size limit = 0/vol size limit = ${VOLSIZELIMIT:-500000}/" /etc/afp.conf
+sed -i -e "s:path = /backup:path = ${VOLPATH}:" /etc/afp.conf
 
 # Fix backup permissions
 mkdir -p ${VOLPATH} || exit 1
 find ${VOLPATH} -not \( -user timecapsule -a -group timecapsule \) -exec chown timecapsule:timecapsule {} +
 find ${VOLPATH} -type d -a -not -perm -0770 -exec chmod ug+rwx {} +
 
-/etc/init.d/dbus start
+mkdir -p /var/run/dbus
+/usr/bin/dbus-uuidgen --ensure=/etc/machine-id
+/usr/bin/dbus-daemon --system
+
 /usr/sbin/avahi-daemon --no-chroot -D
-/etc/init.d/netatalk start
+
+/sbin/netatalk
+
 tail -F /log/afpd.log
-/etc/init.d/netatalk stop
+
+killall netatalk
 /usr/sbin/avahi-daemon -k
-/etc/init.d/dbus stop
+killall dbus-daemon
