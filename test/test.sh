@@ -1,5 +1,7 @@
 #!/bin/sh
 
+./wait-for-it.sh timecapsule:548
+
 source /sh2ju.sh
 juLogClean
 
