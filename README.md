@@ -1,4 +1,4 @@
-timecapsule
+timecapsule [![CircleCI](https://circleci.com/gh/double16/timecapsule.svg?style=svg&circle-token=6060fdc30159f0f2ec2ca16dfbc0861e843e50e9)](https://circleci.com/gh/double16/timecapsule)
 ===========
 
 Supports Apple Time Machine backup by using netatalk to look like a time capsule.
