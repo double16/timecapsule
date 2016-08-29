@@ -7,7 +7,7 @@ ADD 2nd-0001-afpd-cannot-build-when-ldap-is-not-defined.patch .
 RUN apk add --no-cache avahi build-base curl db-dev libgcrypt libgcrypt-dev file dbus \
   && curl http://heanet.dl.sourceforge.net/project/netatalk/netatalk/${VERSION}/netatalk-${VERSION}.tar.gz | tar xzf - \
   && cd netatalk-${VERSION} && patch -p1 < ../2nd-0001-afpd-cannot-build-when-ldap-is-not-defined.patch \
-  && ./configure --prefix= --enable-dbus --disable-ldap \
+  && ./configure --prefix= --enable-dbus --disable-ldap --enable-quota --enable-pgp-uam \
   && make \
   && make test \
   && make install \
