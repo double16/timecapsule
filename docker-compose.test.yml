@@ -1,0 +1,12 @@
+version: '2'
+
+services:
+  timecapsule:
+    build: .
+
+  sut:
+    build: test
+    links:
+      - timecapsule
+    volumes:
+      - ./test/results:/results
