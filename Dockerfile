@@ -18,7 +18,7 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.vcs-url="https://github.com/double16/timecapsule.git"
 
 ADD 2nd-0001-afpd-cannot-build-when-ldap-is-not-defined.patch .
-RUN apk add --no-cache avahi build-base curl db-dev libgcrypt libgcrypt-dev file dbus \
+RUN apk add --no-cache avahi build-base curl db-dev libgcrypt libgcrypt-dev file dbus afpfs-ng \
   && curl http://heanet.dl.sourceforge.net/project/netatalk/netatalk/${VERSION}/netatalk-${VERSION}.tar.gz | tar xzf - \
   && cd netatalk-${VERSION} && patch -p1 < ../2nd-0001-afpd-cannot-build-when-ldap-is-not-defined.patch \
   && ./configure --prefix= --enable-dbus --disable-ldap --enable-quota --enable-pgp-uam \
@@ -26,19 +26,22 @@ RUN apk add --no-cache avahi build-base curl db-dev libgcrypt libgcrypt-dev file
   && make test \
   && make install \
   && cd - && rm -rf netatalk-${VERSION} \
-  && apk del build-base libgcrypt-dev
+  && apk del build-base libgcrypt-dev \
+  && addgroup -g 1000 timecapsule \
+  && adduser -u 1000 -G timecapsule -D timecapsule \
+  && echo "timecapsule:timecapsule" | chpasswd
 
-RUN addgroup -g 1000 timecapsule && adduser -u 1000 -G timecapsule -D timecapsule && echo "timecapsule:timecapsule" | chpasswd
-
-VOLUME /log
-VOLUME /backup
+VOLUME [ "/log", "/backup" ]
 EXPOSE 548
 
 COPY etc/afp.conf /etc/
 ADD etc/avahi/services/afpd.service /etc/avahi/services/afpd.service
 
-ADD ./start.sh /start.sh
-RUN chmod u+x  /start.sh
+COPY start.sh healthcheck.sh /
+RUN chmod u+x /*.sh
 
 CMD ["/start.sh"]
 
+# Can't find package for mount_afp in Alpine Linux, afpgetstats isn't working
+#HEALTHCHECK CMD /healthcheck.sh || exit 1
+HEALTHCHECK CMD nc -zv localhost 548 || exit 1
