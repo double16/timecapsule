@@ -8,8 +8,8 @@ dependencies:
   pre:
     - sudo pip install docker-compose
 
-build:
-  pre:
+checkout:
+  post:
     - sed -i '' 's/^HEALTHCHECK/#HEALTHCHECK/' Dockerfile
 
 test:
