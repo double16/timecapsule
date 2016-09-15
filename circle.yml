@@ -8,6 +8,10 @@ dependencies:
   pre:
     - sudo pip install docker-compose
 
+build:
+  pre:
+    - sed -i '' 's/^HEALTHCHECK/#HEALTHCHECK/' Dockerfile
+
 test:
   override:
     - mkdir -p ./test/results
