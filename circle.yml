@@ -10,7 +10,7 @@ dependencies:
 
 checkout:
   post:
-    - sed -i '' 's/^HEALTHCHECK/#HEALTHCHECK/' Dockerfile
+    - sed -i 's/^HEALTHCHECK/#HEALTHCHECK/' Dockerfile
 
 test:
   override:
