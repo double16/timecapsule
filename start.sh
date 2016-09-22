@@ -16,6 +16,7 @@ find ${VOLPATH} -not \( -user timecapsule -a -group timecapsule \) -exec chown t
 find ${VOLPATH} -type d -a -not -perm -0770 -exec chmod ug+rwx {} +
 
 mkdir -p /var/run/dbus
+rm -f /var/run/dbus.pid
 /usr/bin/dbus-uuidgen --ensure=/etc/machine-id
 /usr/bin/dbus-daemon --system
 
