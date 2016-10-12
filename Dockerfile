@@ -31,7 +31,7 @@ RUN apk add --no-cache avahi build-base curl db-dev libgcrypt libgcrypt-dev file
   && adduser -u 1000 -G timecapsule -D timecapsule \
   && echo "timecapsule:timecapsule" | chpasswd
 
-VOLUME [ "/log", "/backup" ]
+VOLUME [ "/backup" ]
 EXPOSE 548
 
 COPY etc/afp.conf /etc/

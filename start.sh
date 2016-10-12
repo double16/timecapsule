@@ -22,9 +22,12 @@ rm -f /var/run/dbus.pid
 
 /usr/sbin/avahi-daemon --no-chroot -D
 
+rm -f /tmp/log
+mkfifo /tmp/log
+
 /sbin/netatalk
 
-tail -F /log/afpd.log
+cat /tmp/log
 
 killall netatalk
 /usr/sbin/avahi-daemon -k
