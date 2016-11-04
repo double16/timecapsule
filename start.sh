@@ -20,6 +20,7 @@ rm -f /var/run/dbus.pid
 /usr/bin/dbus-uuidgen --ensure=/etc/machine-id
 /usr/bin/dbus-daemon --system
 
+rm -f /var/run/avahi-daemon/pid
 /usr/sbin/avahi-daemon --no-chroot -D
 
 rm -f /tmp/log
