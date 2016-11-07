@@ -6,7 +6,7 @@ ARG SOURCE_COMMIT
 ARG DOCKERFILE_PATH
 ARG SOURCE_TYPE
 
-ENV LANG=en_US.UTF-8 LC_ALL=C.UTF-8 LANGUAGE=en_US.UTF-8 VERSION=3.1.9
+ENV LANG=en_US.UTF-8 LC_ALL=C.UTF-8 LANGUAGE=en_US.UTF-8 VERSION=3.1.10
 
 LABEL org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.docker.dockerfile="$DOCKERFILE_PATH/Dockerfile" \
@@ -17,10 +17,9 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.vcs-type="$SOURCE_TYPE" \
       org.label-schema.vcs-url="https://github.com/double16/timecapsule.git"
 
-ADD 2nd-0001-afpd-cannot-build-when-ldap-is-not-defined.patch .
 RUN apk add --no-cache avahi build-base curl db-dev libgcrypt libgcrypt-dev file dbus afpfs-ng \
   && curl http://heanet.dl.sourceforge.net/project/netatalk/netatalk/${VERSION}/netatalk-${VERSION}.tar.gz | tar xzf - \
-  && cd netatalk-${VERSION} && patch -p1 < ../2nd-0001-afpd-cannot-build-when-ldap-is-not-defined.patch \
+  && cd netatalk-${VERSION} \
   && ./configure --prefix= --enable-dbus --disable-ldap --enable-quota --enable-pgp-uam \
   && make \
   && make test \

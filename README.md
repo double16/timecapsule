@@ -23,7 +23,7 @@ volumes:
 
 services:
   timecapsule:
-    image: pdouble16/timecapsule:3.1.9
+    image: pdouble16/timecapsule:3.1.10
     restart: always
     ports:
       - "548:548"
