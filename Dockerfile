@@ -16,6 +16,7 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.vcs-ref=$SOURCE_COMMIT \
       org.label-schema.vcs-type="$SOURCE_TYPE" \
       org.label-schema.vcs-url="https://github.com/double16/timecapsule.git"
+      org.label-schema.vendor="https://github.com/double16"
 
 RUN apk add --no-cache avahi build-base curl db-dev libgcrypt libgcrypt-dev file dbus afpfs-ng \
   && curl http://heanet.dl.sourceforge.net/project/netatalk/netatalk/${VERSION}/netatalk-${VERSION}.tar.gz | tar xzf - \
