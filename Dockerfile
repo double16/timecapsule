@@ -18,7 +18,7 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.vcs-url="https://github.com/double16/timecapsule.git"
 
 RUN apk add --no-cache avahi build-base curl db-dev libgcrypt libgcrypt-dev file dbus afpfs-ng \
-  && curl http://heanet.dl.sourceforge.net/project/netatalk/netatalk/${VERSION}/netatalk-${VERSION}.tar.gz | tar xzf - \
+  && curl --fail --location http://heanet.dl.sourceforge.net/project/netatalk/netatalk/${VERSION}/netatalk-${VERSION}.tar.gz | tar xzf - \
   && cd netatalk-${VERSION} \
   && ./configure --prefix= --enable-dbus --disable-ldap --enable-quota --enable-pgp-uam \
   && make \
