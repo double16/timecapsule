@@ -8,7 +8,9 @@ Supports Apple Time Machine backup by using netatalk to look like a time capsule
 Features:
 - Use net="host" for Bonjour support
 - Volume /backup to store the backup, may use a volume or host mount
+- Volume /content for content cache, may use a volume or host mount
 - VOLPATH environment variable to override /backup for backup storage
+- CONTENTPATH environment variable to override /content for backup storage
 - Volume size limit defaults to 500000KB (~500GB), set using VOLSIZELIMIT environment variable in KB units
 - PUID and PGID to (optionally) set user and group
 
@@ -20,10 +22,11 @@ version: "2"
 
 volumes:
   timecapsule:
+  content:
 
 services:
   timecapsule:
-    image: pdouble16/timecapsule:3.1.10
+    image: pdouble16/timecapsule:3.1.11
     restart: always
     ports:
       - "548:548"
@@ -31,5 +34,6 @@ services:
       - VOLSIZELIMIT=1000000
     volumes:
       - timecapsule:/backup
+      - content:/content
 ```
 

@@ -1,7 +1,6 @@
-FROM alpine:3.7
+FROM alpine:3.8
 MAINTAINER Patrick Double <pat@patdouble.com>
 
-ARG BUILD_DATE
 ARG SOURCE_COMMIT
 ARG DOCKERFILE_PATH
 ARG SOURCE_TYPE
@@ -21,7 +20,7 @@ RUN apk add --no-cache avahi build-base curl db-dev libgcrypt libgcrypt-dev file
   && adduser -u 1000 -G timecapsule -D timecapsule \
   && echo "timecapsule:timecapsule" | chpasswd
 
-VOLUME [ "/backup" ]
+VOLUME [ "/backup", "/content" ]
 EXPOSE 548
 
 COPY etc/afp.conf /etc/
@@ -36,8 +35,7 @@ CMD ["/start.sh"]
 #HEALTHCHECK CMD /healthcheck.sh || exit 1
 HEALTHCHECK CMD nc -zv localhost 548 || exit 1
 
-LABEL org.label-schema.build-date=$BUILD_DATE \
-      org.label-schema.docker.dockerfile="$DOCKERFILE_PATH/Dockerfile" \
+LABEL org.label-schema.docker.dockerfile="$DOCKERFILE_PATH/Dockerfile" \
       org.label-schema.license="Apache-2.0" \
       org.label-schema.name="Supports Apple Time Machine backup by using netatalk ${VERSION} to look like a Time Capsule(tm)" \
       org.label-schema.url="https://github.com/double16/timecapsule" \

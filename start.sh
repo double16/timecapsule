@@ -1,6 +1,7 @@
 #!/bin/sh
 
 test -n "${VOLPATH}" || VOLPATH="/backup"
+test -n "${CONTENTPATH}" || VOLPATH="/content"
 
 # Adjust user/group
 sed -i -e "s/:1000:1000:/:${PUID:-1000}:${PGID:-1000}:/" /etc/passwd
@@ -8,12 +9,13 @@ sed -i -e "s/:1000:1000:/:${PUID:-1000}:${PGID:-1000}:/" /etc/passwd
 # Configure netatalk
 sed -i -e "s/vol size limit = 0/vol size limit = ${VOLSIZELIMIT:-500000}/" /etc/afp.conf
 sed -i -e "s:path = /backup:path = ${VOLPATH}:" /etc/afp.conf
+sed -i -e "s:path = /content:path = ${CONTENTPATH}:" /etc/afp.conf
 cat /etc/afp.conf
 
 # Fix backup permissions
 mkdir -p ${VOLPATH} || exit 1
-find ${VOLPATH} -not \( -user timecapsule -a -group timecapsule \) -exec chown timecapsule:timecapsule {} +
-find ${VOLPATH} -type d -a -not -perm -0770 -exec chmod ug+rwx {} +
+find ${VOLPATH} ${CONTENTPATH} -not \( -user timecapsule -a -group timecapsule \) -exec chown timecapsule:timecapsule {} +
+find ${VOLPATH} ${CONTENTPATH} -type d -a -not -perm -0770 -exec chmod ug+rwx {} +
 
 mkdir -p /var/run/dbus
 rm -f /var/run/dbus.pid
