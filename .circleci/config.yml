@@ -1,0 +1,24 @@
+version: 2
+jobs:
+  build:
+    working_directory: /home/build
+    docker:
+      - image: circleci/buildpack-deps:bionic-curl
+        user: root
+
+    steps:
+      - checkout
+
+      - setup_remote_docker
+
+      - run:
+          name: Docker Build
+          command: ./hooks/build
+
+      - run:
+          name: Short Test
+          command: |
+            . ./hooks/env
+            mkdir -p ./test/results
+            docker-compose -f docker-compose.test.yml build sut
+            docker-compose -f docker-compose.test.yml run sut

@@ -1,5 +1,4 @@
-FROM alpine:3.6
-MAINTAINER Patrick Double <pat@patdouble.com>
+FROM alpine:3.8
 
 COPY *.sh ./
 CMD ["./test.sh"]
